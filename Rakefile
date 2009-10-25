@@ -5,13 +5,18 @@ begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
     gem.name = "mongomapper_ext"
-    gem.summary = %Q{TODO: one-line summary of your gem}
-    gem.description = %Q{TODO: longer description of your gem}
+    gem.summary = %Q{MongoMapper extensions}
+    gem.description = %Q{MongoMapper extensions}
     gem.email = "krawek@gmail.com"
     gem.homepage = "http://github.com/dcu/mongomapper_ext"
     gem.authors = ["David A. Cuadrado"]
-    gem.add_development_dependency "thoughtbot-shoulda", ">= 0"
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+
+    gem.add_dependency('mongo_mapper', '>= 0.5.6')
+    gem.add_dependency('ruby-stemmer', '>= 0.5.3')
+
+    gem.add_development_dependency("shoulda", ">= 2.10.2")
+    gem.add_development_dependency('jnunemaker-matchy', '0.4.0')
+    gem.add_development_dependency('mocha', '>= 0.9.4')
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
@@ -50,3 +55,4 @@ Rake::RDocTask.new do |rdoc|
   rdoc.rdoc_files.include('README*')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
+
