@@ -26,6 +26,7 @@ module MongoMapperExt
       criteria, options = MongoMapper::FinderOptions.new(owner.class, :filename => filename, :metadata => {:_id => owner.id}, :limit => 1).to_a
 
       obj = db.collection("#{owner.collection.name}.files").find(criteria, options).next_object
+
       if obj
         self.new(owner, obj)
       end

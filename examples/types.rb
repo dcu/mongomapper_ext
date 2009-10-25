@@ -9,12 +9,11 @@ class TypeEx
 end
 
 
-type = TypeEx.new(:set => Set.new)
+type = TypeEx.new(:set => Set.new, :config => OpenStruct.new)
 
-config = OpenStruct.new
-config.name = "Alan"
-config.last_name = "Turing"
-type.config = config
+type.config.name = "Alan"
+type.config.last_name = "Turing"
+
 
 type.time = Time.now
 type.set += [1,1,2,3,2,2]

@@ -1,5 +1,5 @@
 module MongoMapperExt
-  module Sluggizer
+  module Slugizer
     def self.included(klass)
       klass.class_eval do
         extend ClassMethods
@@ -43,4 +43,4 @@ module MongoMapperExt
   end
 end
 
-MongoMapper::Associations::Proxy.send(:include, MongoMapperExt::Sluggizer::Finder)
+MongoMapper::Associations::Proxy.send(:include, MongoMapperExt::Slugizer::Finder)

@@ -7,11 +7,13 @@ module MongoMapperExt
       end
     end
 
+    # FIXME: enable metadata. re http://jira.mongodb.org/browse/SERVER-377
     def put_file(filename, io, metadata = {})
       if !new?
+        # :metadata => metadata.deep_merge({:_id => self.id})
         GridFS::GridStore.open(self.class.database, filename, "w",
-                                            :root => self.collection.name,
-                                            :metadata => metadata.deep_merge({:_id => self.id})) do |f|
+                               :root => self.collection.name,
+                               :metadata => {:_id => self.id}) do |f|
           while data = io.read(256)
             f.write(data)
           end
@@ -23,11 +25,13 @@ module MongoMapperExt
     end
 
     def fetch_file(filename)
-      MongoMapperExt::File.fetch(self, filename) if !new?
+      if !new?
+        MongoMapperExt::File.fetch(self, filename)
+      end
     end
 
     def files
-      criteria, options = MongoMapper::FinderOptions.new(:metadata => {:_id => self.id}).to_a
+      criteria, options = MongoMapper::FinderOptions.new(self.class, :metadata => {:_id => self.id}).to_a
       coll = self.class.database.collection("#{self.collection.name}.files")
       @files = coll.find(criteria, options).map do |a|
         MongoMapperExt::File.new(self, a)

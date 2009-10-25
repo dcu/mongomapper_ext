@@ -14,7 +14,7 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'mongomapper_ext'
-require './models'
+require 'models'
 
 class Test::Unit::TestCase
   include CustomMatchers
