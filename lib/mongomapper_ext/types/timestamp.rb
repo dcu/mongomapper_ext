@@ -3,7 +3,8 @@ class Timestamp
     if value.nil? || value == ''
       nil
     else
-      (Time.zone ||= 'UTC').at(value.to_i)
+      Time.zone ||= 'UTC'
+      Time.zone.at(value.to_i)
     end
   end
 

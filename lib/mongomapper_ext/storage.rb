@@ -15,7 +15,7 @@ module MongoMapperExt
           while data = io.read(256)
             f.write(data)
           end
-          f.close
+          io.close
         end
       else
         (@_pending_files ||= {})[filename] = io
@@ -27,7 +27,7 @@ module MongoMapperExt
     end
 
     def files
-      criteria, options = FinderOptions.new(:metadata => {:_id => self.id}).to_a
+      criteria, options = MongoMapper::FinderOptions.new(:metadata => {:_id => self.id}).to_a
       coll = self.class.database.collection("#{self.collection.name}.files")
       @files = coll.find(criteria, options).map do |a|
         MongoMapperExt::File.new(self, a)

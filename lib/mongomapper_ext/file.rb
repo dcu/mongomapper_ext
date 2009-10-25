@@ -23,7 +23,7 @@ module MongoMapperExt
 
     def self.fetch(owner, filename)
       db = owner.class.database
-      criteria, options = FinderOptions.new(owner.class, :filename => filename, :metadata => {:_id => owner.id}, :limit => 1).to_a
+      criteria, options = MongoMapper::FinderOptions.new(owner.class, :filename => filename, :metadata => {:_id => owner.id}, :limit => 1).to_a
 
       obj = db.collection("#{owner.collection.name}.files").find(criteria, options).next_object
       if obj
