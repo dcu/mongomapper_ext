@@ -18,3 +18,6 @@ require 'mongomapper_ext/update'
 
 # filter
 require 'mongomapper_ext/filter'
+
+# slug
+require 'mongomapper_ext/sluggizer'
