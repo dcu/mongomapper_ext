@@ -68,6 +68,10 @@ module MongoMapperExt
         define_method(name) do
           fetch_file(self["_#{name}"]) if metaclass.keys.has_key?("_#{name}")
         end
+
+        define_method("has_#{name}?") do
+          !self["_#{name}"].blank?
+        end
       end
     end
   end
