@@ -7,7 +7,6 @@ require 'uuidtools'
 # types
 require 'mongomapper_ext/types/open_struct'
 require 'mongomapper_ext/types/timestamp'
-require 'mongomapper_ext/types/set'
 
 # storage
 require 'mongomapper_ext/file'

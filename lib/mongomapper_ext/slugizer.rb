@@ -43,4 +43,8 @@ module MongoMapperExt
   end
 end
 
-MongoMapper::Associations::Proxy.send(:include, MongoMapperExt::Slugizer::Finder)
+if defined?(MongoMapper::Associations)
+  MongoMapper::Associations::Proxy.send(:include, MongoMapperExt::Slugizer::Finder)
+else
+  MongoMapper::Plugins::Associations::Proxy.send(:include, MongoMapperExt::Slugizer::Finder)
+end

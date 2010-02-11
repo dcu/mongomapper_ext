@@ -7,4 +7,8 @@ module MongoMapperExt
     end
   end
 end
+
 MongoMapper::EmbeddedDocument.send(:include, MongoMapperExt::Update)
+if !MongoMapper::Document.kind_of?(MongoMapperExt::Update)
+  MongoMapper::Document.send(:include, MongoMapperExt::Update)
+end
