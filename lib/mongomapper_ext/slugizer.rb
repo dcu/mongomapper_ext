@@ -5,32 +5,36 @@ module MongoMapperExt
         extend ClassMethods
         extend Finder
 
-        key :slug, String
-        ensure_index :slug
+        key :slug, String, :index => true
 
         before_validation_on_create :generate_slug
       end
     end
 
     def to_param
-      if self.slug.blank?
-        self.id
-      else
-        self.slug
-      end
+      self.slug.blank? ? self.id : self.slug
     end
 
     protected
     def generate_slug
       if self.slug.blank?
-        key = UUIDTools::UUID.random_create.hexdigest[0,4] #optimize
-        self.slug = key+"-"+self[self.class.slug_key].gsub(/[^A-Za-z0-9\s\-]/, "")[0,20].strip.gsub(/\s+/, "-").downcase
+        slug = self[self.class.slug_key].gsub(/[^A-Za-z0-9\s\-]/, "")[0,20].strip.gsub(/\s+/, "-").downcase
+        if !self.class.slug_options[:unique]
+          key = UUIDTools::UUID.random_create.hexdigest[0,4] #optimize
+          self.slug = key+"-"+slug
+        else
+          self.slug = slug
+        end
       end
     end
 
     module ClassMethods
-      def slug_key(key = :name)
+      def slug_key(key = :name, options = {})
+        @slug_options ||= options
         @slug_key ||= key
+      end
+      class_eval do
+        attr_reader :slug_options
       end
     end
 
