@@ -1,7 +1,11 @@
 module MongoMapperExt
   module Filter
     def self.included(klass)
-      require 'lingua/stemmer'
+      begin
+        require 'lingua/stemmer'
+      rescue LoadError
+        $stderr.puts "install ruby-stemmer `gem install ruby-stemmer` to activate the full text search support"
+      end
 
       klass.class_eval do
         extend ClassMethods
@@ -46,19 +50,26 @@ module MongoMapperExt
         lang = lang.call(self)
       end
 
-      s = Lingua::Stemmer.new(:language => lang)
+      stemmer = nil
+      if defined?(Lingua)
+        stemmer = Lingua::Stemmer.new(:language => lang)
+      end
 
       self._keywords = []
       self.class.filterable_keys.each do |key|
-        self._keywords += keywords_for_value(s, read_attribute(key))
+        self._keywords += keywords_for_value(read_attribute(key), stemmer)
       end
     end
 
     private
-    def keywords_for_value(stemmer, val)
+    def keywords_for_value(val, stemmer=nil)
       if val.kind_of?(String)
         val.downcase.split.map do |word|
-          stem = stemmer.stem(word)
+          stem = word
+          if stemmer
+            stem = stemmer.stem(word)
+          end
+
           if stem != word
             [stem, word]
           else
@@ -66,7 +77,7 @@ module MongoMapperExt
           end
         end.flatten
       elsif val.kind_of?(Array)
-        val.map { |e| keywords_for_value(stemmer, e) }.flatten
+        val.map { |e| keywords_for_value(e, stemmer) }.flatten
       else
         [val]
       end

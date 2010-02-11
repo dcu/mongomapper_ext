@@ -11,8 +11,7 @@ begin
     gem.homepage = "http://github.com/dcu/mongomapper_ext"
     gem.authors = ["David A. Cuadrado"]
 
-    gem.add_dependency('mongo_mapper', '>= 0.5.6')
-    gem.add_dependency('ruby-stemmer', '>= 0.5.3')
+    gem.add_dependency('mongo_mapper', '>= 0.6.10')
     gem.add_dependency('uuidtools', '>= 2.0.0')
 
     gem.add_development_dependency("shoulda", ">= 2.10.2")
