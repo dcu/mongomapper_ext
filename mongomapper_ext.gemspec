@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongomapper_ext}
-  s.version = "0.0.4"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2009-10-25}
+  s.date = %q{2010-02-11}
   s.description = %q{MongoMapper extensions}
   s.email = %q{krawek@gmail.com}
   s.extra_rdoc_files = [
@@ -35,9 +35,9 @@ Gem::Specification.new do |s|
      "lib/mongomapper_ext/slugizer.rb",
      "lib/mongomapper_ext/storage.rb",
      "lib/mongomapper_ext/types/open_struct.rb",
-     "lib/mongomapper_ext/types/set.rb",
      "lib/mongomapper_ext/types/timestamp.rb",
      "lib/mongomapper_ext/update.rb",
+     "mongomapper_ext.gemspec",
      "test/helper.rb",
      "test/models.rb",
      "test/support/custom_matchers.rb",
@@ -78,23 +78,20 @@ Gem::Specification.new do |s|
     s.specification_version = 3
 
     if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<mongo_mapper>, [">= 0.5.6"])
-      s.add_runtime_dependency(%q<ruby-stemmer>, [">= 0.5.3"])
+      s.add_runtime_dependency(%q<mongo_mapper>, [">= 0.6.10"])
       s.add_runtime_dependency(%q<uuidtools>, [">= 2.0.0"])
       s.add_development_dependency(%q<shoulda>, [">= 2.10.2"])
       s.add_development_dependency(%q<jnunemaker-matchy>, ["= 0.4.0"])
       s.add_development_dependency(%q<mocha>, [">= 0.9.4"])
     else
-      s.add_dependency(%q<mongo_mapper>, [">= 0.5.6"])
-      s.add_dependency(%q<ruby-stemmer>, [">= 0.5.3"])
+      s.add_dependency(%q<mongo_mapper>, [">= 0.6.10"])
       s.add_dependency(%q<uuidtools>, [">= 2.0.0"])
       s.add_dependency(%q<shoulda>, [">= 2.10.2"])
       s.add_dependency(%q<jnunemaker-matchy>, ["= 0.4.0"])
       s.add_dependency(%q<mocha>, [">= 0.9.4"])
     end
   else
-    s.add_dependency(%q<mongo_mapper>, [">= 0.5.6"])
-    s.add_dependency(%q<ruby-stemmer>, [">= 0.5.3"])
+    s.add_dependency(%q<mongo_mapper>, [">= 0.6.10"])
     s.add_dependency(%q<uuidtools>, [">= 2.0.0"])
     s.add_dependency(%q<shoulda>, [">= 2.10.2"])
     s.add_dependency(%q<jnunemaker-matchy>, ["= 0.4.0"])
