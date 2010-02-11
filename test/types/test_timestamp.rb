@@ -13,7 +13,7 @@ class TimestampTest < Test::Unit::TestCase
       @start_time = Time.zone.parse('01-01-2009')
       @end_time = @start_time.tomorrow
 
-      @event = Event.create!(:start_date => @start_time, :end_date => @end_time)
+      @event = Event.create!(:start_date => @start_time.to_i, :end_date => @end_time.to_i)
     end
 
     should "store the date" do
@@ -29,7 +29,7 @@ class TimestampTest < Test::Unit::TestCase
       start_time = @start_time.tomorrow.tomorrow
       end_time = start_time.tomorrow
 
-      @event2 = Event.create!(:start_date => start_time, :end_datime => end_time)
+      @event2 = Event.create!(:start_date => start_time.utc, :end_datime => end_time.utc)
 
       Event.count.should == 2
       events = Event.find(:all, :$where => ("this.start_date >= %d && this.start_date <= %d" % [@event.start_date.yesterday.to_i, @event2.start_date.yesterday.to_i]))

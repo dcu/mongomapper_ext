@@ -6,8 +6,7 @@ class TestFilter < Test::Unit::TestCase
       BlogPost.delete_all
       @blogpost = BlogPost.create(:title => "%How dOEs tHIs Work?!",
                                   :body => "HeRe is tHe Body of the bLog pOsT",
-                                  :tags => ["my", "list", "of", "tags"],
-                                  :date => Time.parse('01-01-2009'))
+                                  :tags => ["my", "list", "of", "tags"])
     end
 
     should "be case insensitive" do
