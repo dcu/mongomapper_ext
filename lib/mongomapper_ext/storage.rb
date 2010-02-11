@@ -50,6 +50,7 @@ module MongoMapperExt
 
     module ClassMethods
       def file_key(name)
+        key "_#{name}", String
         define_method("#{name}=") do |file|
           file_id = UUIDTools::UUID.random_create.hexdigest
           filename = name
@@ -65,7 +66,11 @@ module MongoMapperExt
         end
 
         define_method(name) do
-          fetch_file(self["_#{name}"])
+          fetch_file(self["_#{name}"]) if metaclass.keys.has_key?("_#{name}")
+        end
+
+        define_method("has_#{name}?") do
+          !self["_#{name}"].blank?
         end
       end
     end
