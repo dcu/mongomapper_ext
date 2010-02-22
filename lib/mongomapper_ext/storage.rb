@@ -31,7 +31,14 @@ module MongoMapperExt
     end
 
     def files
-      criteria, options = MongoMapper::FinderOptions.new(self.class, :metadata => {:_id => self.id}).to_a
+      finder = nil
+      if defined?(MongoMapper::FinderOptions)
+        finder = MongoMapper::FinderOptions
+      else
+        finder = MongoMapper::Query
+      end
+
+      criteria, options = finder.new(self.class, :metadata => {:_id => self.id}).to_a
       coll = self.class.database.collection("#{self.collection.name}.files")
       @files = coll.find(criteria, options).map do |a|
         MongoMapperExt::File.new(self, a)
@@ -66,7 +73,7 @@ module MongoMapperExt
         end
 
         define_method(name) do
-          fetch_file(self["_#{name}"]) if metaclass.keys.has_key?("_#{name}")
+          fetch_file(self["_#{name}"]) if self.class.keys.has_key?("_#{name}")
         end
 
         define_method("has_#{name}?") do
