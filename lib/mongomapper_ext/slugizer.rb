@@ -40,7 +40,7 @@ module MongoMapperExt
 
     module Finder
       def by_slug(id, options = {})
-        self.find_by_slug(id, options) || self.find_by_id(id, options)
+        self.find_by_slug(id, options) || self.first(options.merge({:_id => id}))
       end
       alias :find_by_slug_or_id :by_slug
     end
