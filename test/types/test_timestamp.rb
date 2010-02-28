@@ -32,7 +32,7 @@ class TimestampTest < Test::Unit::TestCase
       @event2 = Event.create!(:start_date => start_time.utc, :end_datime => end_time.utc)
 
       Event.count.should == 2
-      events = Event.find(:all, :$where => ("this.start_date >= %d && this.start_date <= %d" % [@event.start_date.yesterday.to_i, @event2.start_date.yesterday.to_i]))
+      events = Event.all(:$where => ("this.start_date >= %d && this.start_date <= %d" % [@event.start_date.yesterday.to_i, @event2.start_date.yesterday.to_i]))
 
       events.should == [@event]
     end
