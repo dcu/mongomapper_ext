@@ -26,11 +26,11 @@ require 'mongomapper_ext/tags'
 
 module MongoMapperExt
   def self.init
-    load_jsfiles
+    load_jsfiles(::File.dirname(__FILE__)+"/mongomapper_ext/js")
   end
 
-  def self.load_jsfiles
-    Dir.glob(::File.dirname(__FILE__)+"/mongomapper_ext/js/*.js") do |js_path|
+  def self.load_jsfiles(path)
+    Dir.glob(::File.join(path, "*.js")) do |js_path|
       code = ::File.read(js_path)
       name = ::File.basename(js_path, ".js")
 
