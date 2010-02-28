@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongomapper_ext}
-  s.version = "0.1.2"
+  s.version = "0.1.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2010-02-24}
+  s.date = %q{2010-02-28}
   s.description = %q{MongoMapper extensions}
   s.email = %q{krawek@gmail.com}
   s.extra_rdoc_files = [
@@ -27,13 +27,17 @@ Gem::Specification.new do |s|
      "examples/helper.rb",
      "examples/slugizer.rb",
      "examples/storage.rb",
+     "examples/tags.rb",
      "examples/types.rb",
      "examples/update.rb",
      "lib/mongomapper_ext.rb",
      "lib/mongomapper_ext/file.rb",
      "lib/mongomapper_ext/filter.rb",
+     "lib/mongomapper_ext/js/find_tags.js",
+     "lib/mongomapper_ext/js/tag_cloud.js",
      "lib/mongomapper_ext/slugizer.rb",
      "lib/mongomapper_ext/storage.rb",
+     "lib/mongomapper_ext/tags.rb",
      "lib/mongomapper_ext/types/open_struct.rb",
      "lib/mongomapper_ext/types/timestamp.rb",
      "lib/mongomapper_ext/update.rb",
@@ -44,6 +48,7 @@ Gem::Specification.new do |s|
      "test/test_filter.rb",
      "test/test_slugizer.rb",
      "test/test_storage.rb",
+     "test/test_tags.rb",
      "test/test_update.rb",
      "test/types/test_open_struct.rb",
      "test/types/test_set.rb",
@@ -57,6 +62,7 @@ Gem::Specification.new do |s|
   s.test_files = [
     "test/test_slugizer.rb",
      "test/test_filter.rb",
+     "test/test_tags.rb",
      "test/test_storage.rb",
      "test/test_update.rb",
      "test/support/custom_matchers.rb",
@@ -68,6 +74,7 @@ Gem::Specification.new do |s|
      "examples/types.rb",
      "examples/filter.rb",
      "examples/update.rb",
+     "examples/tags.rb",
      "examples/storage.rb",
      "examples/helper.rb",
      "examples/slugizer.rb"
