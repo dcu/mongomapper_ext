@@ -36,6 +36,7 @@ class BlogPost # for Slug and Filter
   include MongoMapper::Document
   include MongoMapperExt::Filter
   include MongoMapperExt::Slugizer
+  include MongoMapperExt::Tags
 
   filterable_keys :title, :body, :tags, :date
   slug_key :title

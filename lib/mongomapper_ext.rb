@@ -20,3 +20,22 @@ require 'mongomapper_ext/filter'
 
 # slug
 require 'mongomapper_ext/slugizer'
+
+# tags
+require 'mongomapper_ext/tags'
+
+module MongoMapperExt
+  def self.init
+    load_jsfiles
+  end
+
+  def self.load_jsfiles
+    Dir.glob(::File.dirname(__FILE__)+"/mongomapper_ext/js/*.js") do |js_path|
+      code = ::File.read(js_path)
+      name = ::File.basename(js_path, ".js")
+
+      # HACK: looks like ruby driver doesn't support this
+      MongoMapper.database.eval("db.system.js.save({_id: '#{name}', value: #{code}})")
+    end
+  end
+end

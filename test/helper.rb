@@ -14,10 +14,12 @@ $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'lib'))
 $LOAD_PATH.unshift(File.dirname(__FILE__))
 
 require 'mongomapper_ext'
+MongoMapper.database = 'test'
+
 require 'models'
 
 class Test::Unit::TestCase
   include CustomMatchers
 end
 
-MongoMapper.database = 'test'
+MongoMapperExt.init
