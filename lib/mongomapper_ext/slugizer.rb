@@ -18,16 +18,13 @@ module MongoMapperExt
 
     protected
     def generate_slug
-      if self.slug.blank?
-        # slug = self[self.class.slug_key].gsub(/[^A-Za-z0-9\s\-]/, "")[0,20].strip.gsub(/\s+/, "-").downcase
-				slug = self[self.class.slug_key].parametrize
-        if !self.class.slug_options[:unique]
-          key = UUIDTools::UUID.random_create.hexdigest[0,4] #optimize
-          self.slug = key+"-"+slug
-        else
-          self.slug = slug
-        end
-      end
+			slug = self[self.class.slug_key].parametrize
+       if !self.class.slug_options[:unique]
+         key = UUIDTools::UUID.random_create.hexdigest[0,4] #optimize
+         self.slug = key+"-"+slug
+       else
+         self.slug = slug
+       end
     end
 
     module ClassMethods
