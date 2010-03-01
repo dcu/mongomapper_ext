@@ -19,6 +19,7 @@ module MongoMapperExt
 
     def generate_slug
 			slug = self[self.class.slug_key].parameterize.to_s
+			slug = slug[0, self.class.slug_options[:max_length]] if self.class.slug_options[:max_length]
       if !self.class.slug_options[:unique]
         key = UUIDTools::UUID.random_create.hexdigest[0,4] #optimize
         self.slug = key+"-"+slug
