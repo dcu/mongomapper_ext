@@ -12,6 +12,11 @@ class TestSlugizer < Test::Unit::TestCase
       @blogpost.slug.should =~ /\w+-blog-post-title/
     end
 
+    should "not generate the slug if the slug key is blank" do
+      @empty_blogpost = BlogPost.new
+      @empty_blogpost.slug.should be_nil
+    end
+
     should "return the slug as param" do
       @blogpost.to_param =~ /\w+-blog-post-title/
     end
