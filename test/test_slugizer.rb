@@ -25,6 +25,12 @@ class TestSlugizer < Test::Unit::TestCase
       @blogpost.slug = nil
       @blogpost.to_param.should == @blogpost.id
     end
+
+    should "respect the max length option" do
+      @blogpost = BlogPost.create(:title => "ultimo video/cancion en youtube?",
+                                  :body => "HeRe is tHe Body of the bLog pOsT")
+      @blogpost.slug.should =~ /\w+-ultimo-video-canci/
+    end
   end
 
   context "finding objects" do

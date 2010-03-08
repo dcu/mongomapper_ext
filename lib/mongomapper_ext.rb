@@ -1,8 +1,11 @@
 $:.unshift File.dirname(__FILE__)
 
-require 'mongo/gridfs'
+$KCODE = 'u'
+
 require 'mongo_mapper'
+require 'mongo/gridfs'
 require 'uuidtools'
+require 'active_support/inflector'
 
 # types
 require 'mongomapper_ext/types/open_struct'

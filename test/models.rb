@@ -39,7 +39,7 @@ class BlogPost # for Slug and Filter
   include MongoMapperExt::Tags
 
   filterable_keys :title, :body, :tags, :date
-  slug_key :title
+  slug_key :title, :max_length => 18
   language :find_language
 
   key :title, String
