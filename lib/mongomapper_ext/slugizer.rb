@@ -7,7 +7,7 @@ module MongoMapperExt
 
         key :slug, String, :index => true
 
-        before_validation_on_create :generate_slug
+				before_validation :generate_slug
       end
     end
 
@@ -16,17 +16,19 @@ module MongoMapperExt
     end
 
     protected
+
     def generate_slug
-      if self.slug.blank?
-        unless self[self.class.slug_key].blank?
-          slug = self[self.class.slug_key].gsub(/[^A-Za-z0-9\s\-]/, "")[0,20].strip.gsub(/\s+/, "-").downcase
-          if !self.class.slug_options[:unique]
-            key = UUIDTools::UUID.random_create.hexdigest[0,4] #optimize
-            self.slug = key+"-"+slug
-          else
-            self.slug = slug
-          end
-        end
+      return false if self[self.class.slug_key].blank?
+      max_length = self.class.slug_options[:max_length]
+
+			slug = self[self.class.slug_key].parameterize.to_s
+			slug = slug[0, max_length] if max_length
+
+      if !self.class.slug_options[:unique]
+        key = UUIDTools::UUID.random_create.hexdigest[0,4] #optimize
+        self.slug = key+"-"+slug
+      else
+        self.slug = slug
       end
     end
 
