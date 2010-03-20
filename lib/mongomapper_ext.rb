@@ -1,17 +1,26 @@
 $:.unshift File.dirname(__FILE__)
 
-$KCODE = 'u'
+if RUBY_VERSION =~ /^1\.8/
+  $KCODE = 'u'
+end
 
 require 'mongo_mapper'
 require 'mongo/gridfs'
 require 'uuidtools'
 require 'active_support/inflector'
 
+begin
+  require 'magic'
+rescue LoadError
+  $stderr.puts "disabling `magic` support. use 'gem install magic' to enable it"
+end
+
 # types
 require 'mongomapper_ext/types/open_struct'
 require 'mongomapper_ext/types/timestamp'
 
 # storage
+require 'mongomapper_ext/file_list'
 require 'mongomapper_ext/file'
 require 'mongomapper_ext/storage'
 

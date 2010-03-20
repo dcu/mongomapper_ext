@@ -3,83 +3,51 @@ module MongoMapperExt
     def self.included(model)
       model.class_eval do
         extend ClassMethods
-        after_create :_sync_pending_files
-      end
-    end
 
-    # FIXME: enable metadata. re http://jira.mongodb.org/browse/SERVER-377
-    def put_file(filename, io, metadata = {})
-      if !new?
-        # :metadata => metadata.deep_merge({:_id => self.id})
-        GridFS::GridStore.open(self.class.database, filename, "w",
-                               :root => self.collection.name,
-                               :metadata => {:_id => self.id}) do |f|
-          while data = io.read(256)
-            f.write(data)
-          end
-          io.close
-        end
-      else
-        (@_pending_files ||= {})[filename] = io
-      end
-    end
-
-    def fetch_file(filename)
-      if !new?
-        MongoMapperExt::File.fetch(self, filename)
-      end
-    end
-
-    def files
-      finder = nil
-      if defined?(MongoMapper::FinderOptions)
-        finder = MongoMapper::FinderOptions
-      else
-        finder = MongoMapper::Query
-      end
-
-      criteria, options = finder.new(self.class, :metadata => {:_id => self.id}).to_a
-      coll = self.class.database.collection("#{self.collection.name}.files")
-      @files = coll.find(criteria, options).map do |a|
-        MongoMapperExt::File.new(self, a)
-      end
-    end
-
-    protected
-    def _sync_pending_files
-      if @_pending_files
-        @_pending_files.each do |filename, data|
-          put_file(filename, data)
-        end
-        @_pending_files = nil
+        file_list :file_list
       end
     end
 
     module ClassMethods
-      def file_key(name)
-        key "_#{name}", String
+      def gridfs
+        @gridfs ||= Mongo::Grid.new(self.database)
+      end
+
+      def file_list(name)
+        key name, MongoMapperExt::FileList
+        define_method(name) do
+          list = self[name]
+          list.parent_document = self
+          list
+        end
+
+        after_create do |doc|
+          doc.send(name).sync_files
+          doc.save(:validate => false)
+        end
+
+        before_destroy do |doc|
+          doc.send(name).destroy_files
+        end
+      end
+
+      def file_key(name, opts = {})
+        opts[:in] ||= :file_list
+
         define_method("#{name}=") do |file|
-          file_id = UUIDTools::UUID.random_create.hexdigest
-          filename = name
-
-          if file.respond_to?(:original_filename)
-            filename = file.original_filename
-          elsif file.respond_to?(:path)
-            filename = file.path
-          end
-
-          put_file(file_id, file, :original_filename => filename)
-          self["_#{name}"] = file_id
+          send(opts[:in]).get(name).put(name, file)
         end
 
         define_method(name) do
-          fetch_file(self["_#{name}"]) if self.class.keys.has_key?("_#{name}")
+          send(opts[:in]).get(name)
         end
 
         define_method("has_#{name}?") do
-          !self["_#{name}"].blank?
+          send(opts[:in]).has_key?(name)
         end
       end
+
+      private
     end
   end
 end

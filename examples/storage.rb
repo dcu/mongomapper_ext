@@ -4,19 +4,36 @@ class StorageEx
   include MongoMapper::Document
   include MongoMapperExt::Storage
 
-  file_key :my_file
+  file_key :default_file
+
+  file_list :attachments
+  file_key :an_attachment, :in => :attachments
 end
 
-file = StringIO.new("file content")
-file2 = StringIO.new("file content 2")
+default_file = StringIO.new("default file content")
+custom_attachment = StringIO.new("custom attachment content")
+
+attachment = File.open(__FILE__)
+
+StorageEx.destroy_all
 
 s = StorageEx.new
-s.put_file("filename.txt", file)
-s.my_file = file2
+
+s.default_file = default_file
+s.attachments.put("custom_attachment.txt", custom_attachment)
+s.an_attachment = attachment
 
 s.save
 
+
 from_db = StorageEx.find(s.id)
 
-puts from_db.fetch_file("filename.txt").read
-puts from_db.my_file.read
+puts "READ DEFAULT FILE"
+puts from_db.default_file.read
+
+puts "READ CUSTOM ATTACHMENT"
+puts from_db.attachments.get("custom_attachment.txt").read
+
+puts "READ NAMED ATTACHMENT"
+puts from_db.an_attachment.read.inspect
+puts "MIME TYPE: #{from_db.an_attachment.mime_type}"
