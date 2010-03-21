@@ -9,13 +9,15 @@ class StorageTest < Test::Unit::TestCase
 
     should "store the file" do
       @avatar.put_file("an_avatar.png", @data)
-      data = Avatar.find(@avatar.id).fetch_file("an_avatar.png").read
+      @avatar.save
+      avatar = Avatar.find(@avatar.id)
+      data = avatar.fetch_file("an_avatar.png").read
       data.should == "my avatar image"
     end
 
-    should "close the file after storing" do
+    should "not close the file after storing" do
       @avatar.put_file("an_avatar.png", @data)
-      @data.should be_closed
+      @data.should_not be_closed
     end
 
     context "in attributes" do
@@ -38,9 +40,9 @@ class StorageTest < Test::Unit::TestCase
         @avatar.fetch_file("an_avatar.png").read.should == "my avatar image"
       end
 
-      should "store not the file if object is new" do
+      should "not store the file if object is new" do
         @avatar.put_file("an_avatar.png", @data)
-        @avatar.fetch_file("an_avatar.png").should be_nil
+        lambda {@avatar.fetch_file("an_avatar.png").read}.should raise_error
       end
     end
   end

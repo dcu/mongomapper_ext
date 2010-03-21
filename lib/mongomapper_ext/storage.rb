@@ -50,15 +50,15 @@ module MongoMapperExt
         opts[:in] ||= :file_list
 
         define_method("#{name}=") do |file|
-          send(opts[:in]).get(name).put(name, file)
+          send(opts[:in]).get(name.to_s).put(name.to_s, file)
         end
 
         define_method(name) do
-          send(opts[:in]).get(name)
+          send(opts[:in]).get(name.to_s)
         end
 
         define_method("has_#{name}?") do
-          send(opts[:in]).has_key?(name)
+          send(opts[:in]).has_key?(name.to_s)
         end
       end
 

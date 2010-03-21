@@ -4,6 +4,7 @@ module MongoMapperExt
 
     key :_id, String
     key :name, String
+    alias :filename :name
 
     def put(filename, io, options = {})
       options[:_id] = grid_filename

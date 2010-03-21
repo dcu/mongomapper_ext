@@ -44,7 +44,7 @@ module MongoMapperExt
     end
 
     def get(id)
-      file = self[id.to_s]
+      file = self[id]
       if file.nil?
         file = self[id] = MongoMapperExt::File.new
       end
