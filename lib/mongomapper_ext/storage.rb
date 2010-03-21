@@ -8,6 +8,21 @@ module MongoMapperExt
       end
     end
 
+    def put_file(name, io, options = {})
+      file_list = send(options.delete(:in) || :file_list)
+      file_list.put(name, io, options)
+    end
+
+    def fetch_file(name, options = {})
+      file_list = send(options.delete(:in) || :file_list)
+      file_list.get(name)
+    end
+
+    def files(options = {})
+      file_list = send(options.delete(:in) || :file_list)
+      file_list.files
+    end
+
     module ClassMethods
       def gridfs
         @gridfs ||= Mongo::Grid.new(self.database)
