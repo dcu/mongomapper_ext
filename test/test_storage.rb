@@ -45,6 +45,28 @@ class StorageTest < Test::Unit::TestCase
         lambda {@avatar.fetch_file("an_avatar.png").read}.should raise_error
       end
     end
+
+    context "with lists" do
+      setup do
+        @avatar = Avatar.new
+        @alternative = File.new(__FILE__)
+      end
+      teardown do
+        @alternative.close
+      end
+
+      should "store the file" do
+        @avatar.first_alternative = @alternative
+        fromdb = @avatar.reload
+        fromdb.first_alternative.read.should == @alternative
+      end
+
+      should "store the file in the alternative list" do
+        @avatar.alternatives.put("an_alternative", @alternative)
+        @avatar.reload
+        @avatar.alternatives.get("an_alternative").read.should == @alternative
+      end
+    end
   end
 
   context "Fetching files" do

@@ -25,6 +25,9 @@ class Avatar # for Storage and File
   include MongoMapperExt::Storage
 
   file_key :data
+
+  file_list :alternatives
+  file_key :first_alternative, :in => :alternatives
 end
 
 class UserConfig #for OpenStruct
