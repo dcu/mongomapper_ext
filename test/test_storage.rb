@@ -50,6 +50,7 @@ class StorageTest < Test::Unit::TestCase
       setup do
         @avatar = Avatar.new
         @alternative = File.new(__FILE__)
+        @data = File.read(__FILE__)
       end
       teardown do
         @alternative.close
@@ -57,14 +58,16 @@ class StorageTest < Test::Unit::TestCase
 
       should "store the file" do
         @avatar.first_alternative = @alternative
+        @avatar.save
         fromdb = @avatar.reload
-        fromdb.first_alternative.read.should == @alternative
+        fromdb.first_alternative.read.should == @data
       end
 
       should "store the file in the alternative list" do
         @avatar.alternatives.put("an_alternative", @alternative)
+        @avatar.save
         @avatar.reload
-        @avatar.alternatives.get("an_alternative").read.should == @alternative
+        @avatar.alternatives.get("an_alternative").read.should == @data
       end
     end
   end
