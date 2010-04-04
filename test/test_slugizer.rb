@@ -31,6 +31,21 @@ class TestSlugizer < Test::Unit::TestCase
                                   :body => "HeRe is tHe Body of the bLog pOsT")
       @blogpost.slug.should =~ /\w+-ultimo-video-canci/
     end
+
+    should "not accept slugs with length < :min_length" do
+      @blogpost = BlogPost.create(:title => "a",
+                                  :body => "HeRe is tHe Body of the bLog pOsT")
+      @blogpost.slug.should be_nil
+    end
+
+    should "update the slug after updating the object" do
+      @blogpost = BlogPost.create(:title => "ultimo video/cancion en youtube?",
+                                  :body => "HeRe is tHe Body of the bLog pOsT")
+      @blogpost.slug.should =~ /\w+-ultimo-video-canci/
+      @blogpost.title = "primer video/cancion en youtube?"
+      @blogpost.valid?
+      @blogpost.slug.should =~ /\w+-primer-video-canci/
+    end
   end
 
   context "finding objects" do
