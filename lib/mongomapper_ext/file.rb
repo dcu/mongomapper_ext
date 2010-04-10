@@ -4,6 +4,9 @@ module MongoMapperExt
 
     key :_id, String
     key :name, String
+    key :extension, String
+    key :content_type, String
+
     alias :filename :name
 
     def put(filename, io, options = {})
@@ -13,13 +16,28 @@ module MongoMapperExt
       options[:metadata][:collection] = _root_document.collection.name
 
       self.name = filename
-      if defined?(Magic)
-        data = io.read(256) # be nice with memory usage
-        options[:content_type] = Magic.guess_string_mime_type(data)
-        io.rewind
+      if filename =~ /\.([\w]{2,4})$/
+        self.extension = $1
       end
 
-      gridfs.put(io, grid_filename, options)
+      if io.kind_of?(String)
+        io = StringIO.new(io)
+      end
+
+      if defined?(Magic)
+        data = io.read(256) # be nice with memory usage
+        self.content_type = options[:content_type] = Magic.guess_string_mime_type(data.to_s)
+        self.extension ||= options[:content_type].to_s.split("/").last.split("-").last
+
+        if io.respond_to?(:rewind)
+          io.rewind
+        else
+          io.seek(0)
+        end
+      end
+
+      gridfs.delete(grid_filename)
+      gridfs.put(io, grid_filename, options).inspect
     end
 
     def get
@@ -31,7 +49,7 @@ module MongoMapperExt
     end
 
     def mime_type
-      get.content_type
+      self.content_type || get.content_type
     end
 
     def size
