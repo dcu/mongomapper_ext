@@ -37,8 +37,9 @@ class TestTags < Test::Unit::TestCase
 
     should "find tags that start with li" do
       tags = BlogPost.find_tags(/^li/)
-      tags.should include("linux")
-      tags.should include("list")
+      [{"name"=>"list", "count"=>2.0}, {"name"=>"linux", "count"=>1.0}].each do |entry|
+        tags.should include(entry)
+      end
       tags.size.should == 2
     end
 
