@@ -92,7 +92,55 @@ module MongoMapperExt
         end
       end
 
+      # NOTE: this method will be removed on next release
+      def upgrade_file_keys(*keys)
+        cname = self.collection_name
+
+        self.find_each do |object|
+          keys.each do |key|
+            object.upgrade_file_key(key, false)
+          end
+
+          object.save(:validate => false)
+        end
+
+        self.database.drop_collection(cname+".files")
+        self.database.drop_collection(cname+".chunks")
+      end
+
       private
+    end
+
+    # NOTE: this method will be removed on next release
+    def upgrade_file_key(key, save = true)
+      cname = self.collection.name
+
+      files = self.database["#{cname}.files"]
+      chunks = self.database["#{cname}.chunks"]
+
+      fname = self["_#{key}"] rescue nil
+      return if fname.blank?
+
+      begin
+        n = Mongo::GridIO.new(files, chunks, fname, "r", :query => {:filename => fname})
+
+        v = n.read
+
+        if !v.empty?
+          data = StringIO.new(v)
+          self.put_file(key, data)
+          self["_#{key}"] = nil
+
+          self.save(:validate => false) if save
+        end
+      rescue => e
+        puts "ERROR: #{e}"
+        puts e.backtrace.join("\t\n")
+        return
+      end
+
+      files.remove(:_id => fname)
+      chunks.remove(:_id => fname)
     end
   end
 end
