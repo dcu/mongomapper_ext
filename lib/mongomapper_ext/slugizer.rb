@@ -38,7 +38,7 @@ module MongoMapperExt
     module ClassMethods
       def slug_key(key = :name, options = {})
         @slug_options ||= options
-        @@callback_type ||= begin
+        @callback_type ||= begin
           type = options[:callback_type] || :before_validation_on_create
 
           send(type, :generate_slug)
