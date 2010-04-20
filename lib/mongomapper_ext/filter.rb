@@ -31,27 +31,54 @@ module MongoMapperExt
 
       def filter(query, opts = {})
         stemmer = nil
-        q = query.downcase.split
+        original_words = Set.new(query.downcase.split)
         language = opts.delete(:language) || 'en'
 
+        stemmed = []
         if defined?(Lingua)
           stemmer = Lingua::Stemmer.new(:language => language)
-          q.dup.each do |word|
-            q << stemmer.stem(word)
+          original_words.each do |word|
+            stemmed_word = stemmer.stem(word)
+            stemmed << stemmed_word unless original_words.include?(stemmed_word)
           end
         end
 
-        q.map! do |k|
+        regex = (original_words+stemmed).map do |k|
           /^#{Regexp.escape(k)}/
         end
 
-        puts q.inspect
-
         if opts[:per_page]
-          self.paginate(opts.deep_merge(:conditions => {:_keywords => q }))
+          result = self.paginate(opts.deep_merge(:conditions => {:_keywords => regex }))
+          pagination = MongoMapper::Plugins::Pagination::Proxy.new(result.total_entries, result.current_page, result.per_page)
+
+          pagination.subject = result.sort_by do |e|
+            evaluate_result(e._keywords, original_words, stemmed) * -1
+          end
+
+          pagination
         else
-          self.all(opts.deep_merge(:conditions => {:_keywords => q }))
+          self.all(opts.deep_merge(:conditions => {:_keywords => regex })).sort_by do |e|
+            evaluate_result(e._keywords, original_words, stemmed)
+          end
         end
+      end
+
+      private
+      def evaluate_result(keywords, original_words, stemmed)
+        score = 0.0
+        original_words.each do |word|
+          if keywords.include?(word)
+            score += 15.0
+          end
+        end
+
+        stemmed.each do |word|
+          if keywords.include?(word)
+            score += 1.0 + word.length
+          end
+        end
+
+        score
       end
     end
 
@@ -86,18 +113,23 @@ module MongoMapperExt
         words = []
         val.downcase.split.each do |word|
           next if word.length < 3
-          next if word =~ %r{'|"|\/|\\}
           next if stop_words.include?(word)
 
-          stem = word
-          if stemmer
-            stem = stemmer.stem(word)
-          end
+          deword = word.split(%r{'|"|\/|\\|\?|\+|_|\-|\>|\>})
 
-          if stem && stem != word
-            words += [stem, word]
-          else
-            words << word
+          deword.each do |word|
+            next if word.empty?
+
+            stem = word
+            if stemmer
+              stem = stemmer.stem(word)
+            end
+
+            if stem && stem != word
+              words += [stem, word]
+            else
+              words << word
+            end
           end
         end
 
