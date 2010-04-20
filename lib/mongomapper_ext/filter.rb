@@ -30,13 +30,27 @@ module MongoMapperExt
       end
 
       def filter(query, opts = {})
-        q = query.downcase.split.map do |k|
-          Regexp.escape(k)
-        end.join("|")
+        stemmer = nil
+        q = query.downcase.split
+        language = opts.delete(:language) || 'en'
+
+        if defined?(Lingua)
+          stemmer = Lingua::Stemmer.new(:language => language)
+          q.dup.each do |word|
+            q << stemmer.stem(word)
+          end
+        end
+
+        q.map! do |k|
+          /^#{Regexp.escape(k)}/
+        end
+
+        puts q.inspect
+
         if opts[:per_page]
-          self.paginate(opts.deep_merge(:conditions => {:_keywords => /^(#{q}).*/ }))
+          self.paginate(opts.deep_merge(:conditions => {:_keywords => q }))
         else
-          self.all(opts.deep_merge(:conditions => {:_keywords => /^(#{q}).*/ }))
+          self.all(opts.deep_merge(:conditions => {:_keywords => q }))
         end
       end
     end
