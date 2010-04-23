@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2010-04-20}
+  s.date = %q{2010-04-23}
   s.description = %q{MongoMapper extensions}
   s.email = %q{krawek@gmail.com}
   s.extra_rdoc_files = [
@@ -35,6 +35,7 @@ Gem::Specification.new do |s|
      "lib/mongomapper_ext/file.rb",
      "lib/mongomapper_ext/file_list.rb",
      "lib/mongomapper_ext/filter.rb",
+     "lib/mongomapper_ext/js/filter.js",
      "lib/mongomapper_ext/js/find_tags.js",
      "lib/mongomapper_ext/js/tag_cloud.js",
      "lib/mongomapper_ext/slugizer.rb",
