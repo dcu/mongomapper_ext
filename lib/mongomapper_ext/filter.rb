@@ -14,6 +14,8 @@ module MongoMapperExt
         ensure_index :_keywords
 
         before_save :_update_keywords
+
+        attr_accessor :search_score
       end
     end
 
@@ -47,38 +49,23 @@ module MongoMapperExt
           /^#{Regexp.escape(k)}/
         end
 
-        if opts[:per_page]
-          result = self.paginate(opts.deep_merge(:conditions => {:_keywords => regex }))
-          pagination = MongoMapper::Plugins::Pagination::Proxy.new(result.total_entries, result.current_page, result.per_page)
+        min_score = opts.delete(:min_score) || 1.0
+        limit = opts.delete(:per_page) || 25
+        page = opts.delete(:page) || 1
+        select = opts.delete(:select)
 
-          pagination.subject = result.sort_by do |e|
-            evaluate_result(e._keywords, original_words, stemmed) * -1
-          end
+        results = self.database.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, opts.merge({"_keywords" => {:$in => regex}}), {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
 
-          pagination
-        else
-          self.all(opts.deep_merge(:conditions => {:_keywords => regex })).sort_by do |e|
-            evaluate_result(e._keywords, original_words, stemmed)
-          end
-        end
-      end
+        pagination = MongoMapper::Plugins::Pagination::Proxy.new(results["total_entries"], page, limit)
 
-      private
-      def evaluate_result(keywords, original_words, stemmed)
-        score = 0.0
-        original_words.each do |word|
-          if keywords.include?(word)
-            score += 15.0
-          end
+        pagination.subject = results['results'].map do |result|
+          item = self.new(result['doc'])
+          item.search_score = result['score']
+
+          item
         end
 
-        stemmed.each do |word|
-          if keywords.include?(word)
-            score += 1.0 + word.length
-          end
-        end
-
-        score
+        pagination
       end
     end
 
