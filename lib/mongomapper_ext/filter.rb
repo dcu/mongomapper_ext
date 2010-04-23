@@ -49,12 +49,14 @@ module MongoMapperExt
           /^#{Regexp.escape(k)}/
         end
 
-        min_score = opts.delete(:min_score) || 1.0
+        min_score = opts.delete(:min_score) || 0.0
         limit = opts.delete(:per_page) || 25
         page = opts.delete(:page) || 1
-        select = opts.delete(:select)
+        select = opts.delete(:select) || self.keys.keys
 
-        results = self.database.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, opts.merge({"_keywords" => {:$in => regex}}), {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
+        criteria, options = to_query(opts)
+
+        results = self.database.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, criteria.merge({"_keywords" => {:$in => regex}}), {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
 
         pagination = MongoMapper::Plugins::Pagination::Proxy.new(results["total_entries"], page, limit)
 
