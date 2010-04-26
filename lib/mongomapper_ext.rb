@@ -18,6 +18,7 @@ end
 # types
 require 'mongomapper_ext/types/open_struct'
 require 'mongomapper_ext/types/timestamp'
+require 'mongomapper_ext/types/translation'
 
 # storage
 require 'mongomapper_ext/file_list'
@@ -51,3 +52,4 @@ module MongoMapperExt
     end
   end
 end
+
