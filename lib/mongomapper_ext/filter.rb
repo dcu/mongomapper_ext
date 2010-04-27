@@ -125,6 +125,8 @@ module MongoMapperExt
         words
       elsif val.kind_of?(Array)
         val.map { |e| keywords_for_value(e, stemmer, stop_words) }.flatten
+      elsif val.kind_of?(Hash)
+        val.map { |k, v| keywords_for_value(v, stemmer, stop_words) }.flatten
       elsif val
         [val]
       else
