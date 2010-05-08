@@ -114,10 +114,18 @@ module MongoMapperExt
               stem = stemmer.stem(word)
             end
 
-            if stem && stem != word
-              words += [stem, word]
-            else
-              words << word
+            normalized=word.mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n, '').to_s
+
+            if word != normalized
+              words << normalized
+            end
+
+            words << word
+            if stem
+              normalized=stem.mb_chars.normalize(:kd).gsub(/[^\x00-\x7F]/n, '').to_s
+
+              words << normalized if stem != normalized
+              words << stem if stem != word
             end
           end
         end

@@ -4,9 +4,12 @@ class TestFilter < Test::Unit::TestCase
   context "filtering data" do
     setup do
       BlogPost.delete_all
-      @blogpost = BlogPost.create(:title => "%How dOEs tHIs Work?!",
-                                  :body => "HeRe is tHe Body of the bLog pOsT",
-                                  :tags => ["my", "list", "of", "tags"])
+      @blogpost = BlogPost.create!(:title => "%How dOEs tHIs Work?!",
+                                   :body => "HeRe is tHe Body of the bLog pOsT",
+                                   :tags => ["my", "list", "of", "tags"])
+      @entradablog = BlogPost.create!(:title => "sobre las piña",
+                                      :body => "la piña no es un árbol",
+                                      :tags => ["frutas"])
     end
 
     should "be case insensitive" do
@@ -31,6 +34,11 @@ class TestFilter < Test::Unit::TestCase
 
     should "ignore inexistant words" do
       BlogPost.filter("work lalala").should == [@blogpost]
+    end
+
+    should "normalize the text" do
+      BlogPost.filter("pina").should == [@entradablog]
+      BlogPost.filter("arbol").should == [@entradablog]
     end
 
     should "allow to paginate results" do
