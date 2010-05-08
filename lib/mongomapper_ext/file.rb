@@ -36,8 +36,9 @@ module MongoMapperExt
         end
       end
 
+      options[:filename] = grid_filename
       gridfs.delete(grid_filename)
-      gridfs.put(io, grid_filename, options).inspect
+      gridfs.put(io, options)
     end
 
     def get

@@ -5,7 +5,6 @@ if RUBY_VERSION =~ /^1\.8/
 end
 
 require 'mongo_mapper'
-require 'mongo/gridfs'
 require 'uuidtools'
 require 'active_support/inflector'
 
