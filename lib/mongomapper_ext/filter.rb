@@ -38,7 +38,7 @@ module MongoMapperExt
 
         stemmed = []
         if defined?(Lingua)
-          stemmer = Lingua::Stemmer.new(:language => language)
+          stemmer = MongoMapperExt::Filter.build_stemmer(language)
           original_words.each do |word|
             stemmed_word = stemmer.stem(word)
             stemmed << stemmed_word unless original_words.include?(stemmed_word)
@@ -82,7 +82,7 @@ module MongoMapperExt
 
       stemmer = nil
       if defined?(Lingua)
-        stemmer = Lingua::Stemmer.new(:language => lang)
+        stemmer = MongoMapperExt::Filter.build_stemmer(lang)
       end
 
       stop_words = []
@@ -139,6 +139,14 @@ module MongoMapperExt
         [val]
       else
         []
+      end
+    end
+
+    def self.build_stemmer(language)
+      begin
+        return Lingua::Stemmer.new(:language => language)
+      rescue Lingua::StemmerError
+        return nil
       end
     end
 
