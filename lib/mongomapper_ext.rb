@@ -14,6 +14,8 @@ rescue LoadError
   $stderr.puts "disabling `magic` support. use 'gem install magic' to enable it"
 end
 
+require 'mongomapper_ext/paginator'
+
 # types
 require 'mongomapper_ext/types/open_struct'
 require 'mongomapper_ext/types/timestamp'

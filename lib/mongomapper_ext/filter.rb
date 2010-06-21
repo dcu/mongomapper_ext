@@ -54,11 +54,11 @@ module MongoMapperExt
         page = opts.delete(:page) || 1
         select = opts.delete(:select) || self.keys.keys
 
-        criteria, options = to_query(opts)
+        query = Plucky::Query.new(self.collection, opts)
 
-        results = self.database.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, criteria.merge({"_keywords" => {:$in => regex}}), {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
+        results = self.database.eval("function(collection, q, config) { return filter(collection, q, config); }", self.collection_name, query.criteria.source.merge({"_keywords" => {:$in => regex}}), {:words => original_words.to_a, :stemmed => stemmed.to_a, :limit => limit, :min_score => min_score, :select => select })
 
-        pagination = MongoMapper::Plugins::Pagination::Proxy.new(results["total_entries"], page, limit)
+        pagination = Paginator.new(results["total_entries"], page, limit)
 
         pagination.subject = results['results'].map do |result|
           item = self.new(result['doc'])
