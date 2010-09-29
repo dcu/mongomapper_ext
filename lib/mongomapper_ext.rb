@@ -25,6 +25,7 @@ require 'mongomapper_ext/types/translation'
 require 'mongomapper_ext/file_list'
 require 'mongomapper_ext/file'
 require 'mongomapper_ext/storage'
+require 'mongomapper_ext/file_server'
 
 # update
 require 'mongomapper_ext/update'

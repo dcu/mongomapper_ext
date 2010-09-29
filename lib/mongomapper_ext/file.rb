@@ -42,7 +42,7 @@ module MongoMapperExt
     end
 
     def get
-      gridfs.get(grid_filename)
+      @io ||= gridfs.get(grid_filename)
     end
 
     def grid_filename
@@ -62,6 +62,7 @@ module MongoMapperExt
     end
 
     def delete
+      @io = nil
       gridfs.delete(grid_filename)
     end
 
