@@ -23,7 +23,7 @@ class TestSlugizer < Test::Unit::TestCase
 
     should "return the id if slug was not generated" do
       @blogpost.slug = nil
-      @blogpost.to_param.should == @blogpost.id
+      @blogpost.to_param.should == @blogpost.id.to_s
     end
 
     should "respect the max length option" do
