@@ -17,6 +17,7 @@ begin
     gem.add_development_dependency("shoulda", ">= 2.10.2")
     gem.add_development_dependency('jnunemaker-matchy', '0.4.0')
     gem.add_development_dependency('mocha', '>= 0.9.4')
+    gem.add_development_dependency('timecop')
   end
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
