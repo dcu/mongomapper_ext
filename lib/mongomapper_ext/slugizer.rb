@@ -10,7 +10,7 @@ module MongoMapperExt
     end
 
     def to_param
-      self.slug.blank? ? self.id : self.slug
+      self.slug.blank? ? self.id.to_s : self.slug
     end
 
     protected
