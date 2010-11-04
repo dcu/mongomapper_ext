@@ -61,6 +61,7 @@ module MongoMapperExt
         pagination = Paginator.new(results["total_entries"], page, limit)
 
         pagination.subject = results['results'].map do |result|
+          result['doc']['_new'] = false
           item = self.new(result['doc'])
           item.search_score = result['score']
 
