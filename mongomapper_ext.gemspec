@@ -5,21 +5,21 @@
 
 Gem::Specification.new do |s|
   s.name = %q{mongomapper_ext}
-  s.version = "0.5.0"
+  s.version = "0.4.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["David A. Cuadrado"]
-  s.date = %q{2010-09-28}
+  s.date = %q{2010-11-04}
   s.description = %q{MongoMapper extensions}
   s.email = %q{krawek@gmail.com}
   s.extra_rdoc_files = [
     "LICENSE",
-     "README.rdoc",
-     "TODO"
+     "README.rdoc"
   ]
   s.files = [
     ".document",
      ".gitignore",
+     "Gemfile",
      "LICENSE",
      "README.rdoc",
      "Rakefile",
@@ -68,24 +68,24 @@ Gem::Specification.new do |s|
   s.summary = %q{MongoMapper extensions}
   s.test_files = [
     "test/test_slugizer.rb",
-     "test/test_filter.rb",
-     "test/test_tags.rb",
-     "test/test_storage.rb",
-     "test/test_update.rb",
-     "test/support/custom_matchers.rb",
      "test/models.rb",
-     "test/helper.rb",
-     "test/types/test_open_struct.rb",
-     "test/types/test_timestamp.rb",
+     "test/test_update.rb",
      "test/types/test_set.rb",
+     "test/types/test_timestamp.rb",
+     "test/types/test_open_struct.rb",
+     "test/support/custom_matchers.rb",
+     "test/test_storage.rb",
+     "test/test_tags.rb",
+     "test/test_filter.rb",
+     "test/helper.rb",
+     "examples/slugizer.rb",
      "examples/types.rb",
-     "examples/filter.rb",
-     "examples/update.rb",
      "examples/tags.rb",
      "examples/storage.rb",
-     "examples/helper.rb",
+     "examples/update.rb",
+     "examples/filter.rb",
      "examples/i18n.rb",
-     "examples/slugizer.rb"
+     "examples/helper.rb"
   ]
 
   if s.respond_to? :specification_version then
@@ -98,12 +98,14 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<shoulda>, [">= 2.10.2"])
       s.add_development_dependency(%q<jnunemaker-matchy>, ["= 0.4.0"])
       s.add_development_dependency(%q<mocha>, [">= 0.9.4"])
+      s.add_development_dependency(%q<timecop>, [">= 0"])
     else
       s.add_dependency(%q<mongo_mapper>, ["~> 0.8"])
       s.add_dependency(%q<uuidtools>, [">= 2.0.0"])
       s.add_dependency(%q<shoulda>, [">= 2.10.2"])
       s.add_dependency(%q<jnunemaker-matchy>, ["= 0.4.0"])
       s.add_dependency(%q<mocha>, [">= 0.9.4"])
+      s.add_dependency(%q<timecop>, [">= 0"])
     end
   else
     s.add_dependency(%q<mongo_mapper>, ["~> 0.8"])
@@ -111,6 +113,7 @@ Gem::Specification.new do |s|
     s.add_dependency(%q<shoulda>, [">= 2.10.2"])
     s.add_dependency(%q<jnunemaker-matchy>, ["= 0.4.0"])
     s.add_dependency(%q<mocha>, [">= 0.9.4"])
+    s.add_dependency(%q<timecop>, [">= 0"])
   end
 end
 

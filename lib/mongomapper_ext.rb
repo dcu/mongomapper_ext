@@ -8,12 +8,6 @@ require 'mongo_mapper'
 require 'uuidtools'
 require 'active_support/inflector'
 
-begin
-  require 'magic'
-rescue LoadError
-  $stderr.puts "disabling `magic` support. use 'gem install magic' to enable it"
-end
-
 require 'mongomapper_ext/paginator'
 
 # types
@@ -40,7 +34,15 @@ require 'mongomapper_ext/slugizer'
 require 'mongomapper_ext/tags'
 
 module MongoMapperExt
-  def self.init
+  def self.init(options = {})
+    options.reverse_merge! :enable_magic => true
+    if options[:enable_magic]
+      begin
+        require 'magic'
+      rescue LoadError
+        $stderr.puts "disabling `magic` support. use 'gem install magic' to enable it"
+      end
+    end
     load_jsfiles(::File.dirname(__FILE__)+"/mongomapper_ext/js")
   end
 
